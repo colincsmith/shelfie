@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+import React, {Component} from 'react'
 import './App.css';
+import Dashboard from './components/Dashboard'
+import Form from './components/Form'
+import Header from './components/Header'
+import Product from './components/Product'
+import axios from 'axios'
 
-function App() {
+class App extends Component {
+  constructor(){
+    super()
+
+    this.state = {
+      inventory: []
+    }
+  }
+
+  getInventory = () => {
+    axios.get('/api/inventory')
+    .then(res => {
+      this.setState({
+        inventory: res.data
+      })
+    }).catch(err => console.log('we have a problem'))
+  }
+
+  componentDidMount(){
+    this.getInventory()
+  }
+
+
+  render(){
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header/>
+      <Dashboard inventory={this.state.inventory}/>
+      <Form getInventory={this.getInventory}/>
     </div>
   );
+  }
 }
 
 export default App;
